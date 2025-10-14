@@ -2,10 +2,15 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 export default function Home() {
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
+  const servicesRef = useRef<HTMLDivElement>(null);
+
+  const scrollToServices = () => {
+    servicesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 via-blue-900 to-purple-900">
       <div className="bg-gradient-to-br from-slate-900/50 via-purple-900/30 to-blue-900/50">
@@ -31,18 +36,24 @@ export default function Home() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center pt-8">
-                <button className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:from-purple-700 hover:to-blue-700 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25">
+                <button 
+                  onClick={scrollToServices}
+                  className="group relative px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 rounded-full text-white font-semibold text-lg transition-all duration-300 hover:from-purple-700 hover:to-blue-700 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/25"
+                >
                   <span className="relative z-10">Hizmetlerimizi Keşfediniz</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </button>
                 
-                <button className="px-8 py-4 border-2 border-purple-500/50 rounded-full text-slate-300 font-semibold text-lg transition-all duration-300 hover:border-purple-400 hover:text-white hover:bg-purple-500/10 hover:scale-105">
+                <button 
+                  onClick={() => setShowWhatsAppModal(true)}
+                  className="px-8 py-4 border-2 border-purple-500/50 rounded-full text-slate-300 font-semibold text-lg transition-all duration-300 hover:border-purple-400 hover:text-white hover:bg-purple-500/10 hover:scale-105"
+                >
                   İletişime Geçin
                 </button>
               </div>
             </div>
 
-            <div className="text-center space-y-4 max-w-7xl mx-auto">
+            <div ref={servicesRef} className="text-center space-y-4 max-w-7xl mx-auto">
               <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent">
                 Hizmetlerimiz
               </h2>
