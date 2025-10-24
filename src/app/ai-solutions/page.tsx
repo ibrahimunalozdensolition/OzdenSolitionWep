@@ -3,9 +3,15 @@
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
 
+interface Message {
+  role: string;
+  content: string;
+  options?: string[];
+}
+
 export default function AISolutions() {
   const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
-  const [messages, setMessages] = useState<Array<{role: string; content: string}>>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSummarizing, setIsSummarizing] = useState(false);
@@ -28,9 +34,155 @@ export default function AISolutions() {
   useEffect(() => {
     setMessages([{
       role: 'assistant',
-      content: 'Merhaba! 👋 Özden Solutions proje danışmanıyım. Projeniz hakkında konuşalım! Hangi tür bir çözüm arıyorsunuz? İhtiyaçlarınızı dinleyip, size en uygun özellikleri ve teknolojileri önerebilirim.'
+      content: 'Merhaba! 👋 Özden Solutions proje danışmanıyım. Projeniz hakkında konuşalım! Hangi tür bir çözüm arıyorsunuz?',
+      options: [
+        'Web Uygulaması / Web Sitesi',
+        'Mobil Uygulama',
+        'Yapay Zeka Çözümleri',
+        'RPA / Otomasyon',
+        'Grafik Tasarım / UI/UX',
+        'Diğer Hizmetler'
+      ]
     }]);
   }, []);
+
+  const callAIWithRetry = async (conversationHistory: Array<{role: string; parts: Array<{text: string}>}>, systemPrompt: string, maxRetries = 3) => {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyAXa00FoFLPQAHeotpkWT6HDxRRtc9nBFU', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            system_instruction: {
+              parts: [{ text: systemPrompt }]
+            },
+            contents: conversationHistory
+          })
+        });
+
+        const data = await response.json();
+        
+        if (!response.ok || !data.candidates || data.candidates.length === 0) {
+          const errorMsg = data.error?.message || 'API yanıt vermedi';
+          if (errorMsg.includes('overloaded') || errorMsg.includes('quota') || errorMsg.includes('limit')) {
+            if (attempt < maxRetries) {
+              await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+              continue;
+            }
+            throw new Error('OVERLOAD');
+          }
+          throw new Error(errorMsg);
+        }
+        
+        return data.candidates[0]?.content?.parts[0]?.text || 'Üzgünüm, bir hata oluştu.';
+      } catch (error) {
+        if (attempt === maxRetries) throw error;
+        await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+      }
+    }
+    throw new Error('Maksimum deneme sayısına ulaşıldı');
+  };
+
+  const handleOptionClick = async (option: string) => {
+    if (isLoading) return;
+    
+    const userMessage = option;
+    const newMessages = [...messages, { role: 'user', content: userMessage }];
+    setMessages(newMessages);
+    setIsLoading(true);
+
+    try {
+      const systemPrompt = `Sen Özden Solutions şirketinin proje danışmanısın. Görevin kullanıcının proje ihtiyaçlarını anlamak, projeyi geliştirmek ve özellikler önermek.
+
+Şirketin sunduğu hizmetler:
+- Web Uygulaması & Web Sitesi
+- Yapay Zeka Çözümleri (Ürün öneri sistemleri, chatbot, görüntü analizi)
+- Mobil Uygulama
+- RPA (Robotik Süreç Otomasyonu)
+- Grafik Tasarım & UI/UX
+- Elektronik Kart Tasarım
+- Otomasyon Sistemleri
+- Sosyal Medya Yönetimi
+- Mikroişlemci Programlama
+- 3D Baskı
+- Siber Güvenlik
+- Bulut & DevOps
+
+Kurallar:
+1. Önceki konuşmaları hatırla ve bağlamı koru
+2. Her mesajda merhaba deme, sadece ilk mesajda selamlaştın
+3. Kullanıcının proje ihtiyacını dinle ve anla
+4. Açık uçlu soru sormak yerine, kullanıcıya seçebileceği SEÇENEKLER sun
+5. ÇOK ÖNEMLİ: Her yanıtında MUTLAKA seçenekler sun! Açık uçlu soru sorma!
+6. Seçenekleri AYNEN ŞU FORMATTA listele (boşluk ve tire önemli):
+   
+[SEÇENEKLER]
+- Seçenek 1
+- Seçenek 2
+- Seçenek 3
+[/SEÇENEKLER]
+
+7. Her seçenek kısa ve net olmalı (maksimum 5-6 kelime)
+8. 3-6 arası seçenek sun
+9. Teknik öneriler sun
+10. Samimi, profesyonel ve yardımcı ol
+11. FİYAT KONUSUNDA ÖNEMLİ: Fiyat sorulduğunda kesinlikle fiyat verme! "Fiyatlandırma konusunda size yardımcı olamıyorum. Ancak aşağıdaki buton ile yetkili kişilerimizden detaylı fiyat teklifi alabilirsiniz." şeklinde yanıt ver.
+
+Örnek yanıt (TAM OLARAK BU FORMATTA):
+Harika! Web sitesi için size yardımcı olabilirim. Hangi tür bir web sitesi istersiniz?
+
+[SEÇENEKLER]
+- E-Ticaret Sitesi
+- Kurumsal Web Sitesi
+- Blog/İçerik Sitesi
+- Portfolyo Sitesi
+- Online Eğitim Platformu
+[/SEÇENEKLER]
+
+Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
+
+      const conversationHistory = newMessages.slice(1).map(msg => ({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      }));
+
+      let aiResponse = await callAIWithRetry(conversationHistory, systemPrompt);
+      
+      let options: string[] | undefined = undefined;
+      const optionsMatch = aiResponse.match(/\[SEÇENEK[LER]*\]([\s\S]*?)\[\/SEÇENEK[LER]*\]/i);
+      
+      if (optionsMatch) {
+        const optionsText = optionsMatch[1];
+        options = optionsText
+          .split('\n')
+          .map((line: string) => line.trim())
+          .filter((line: string) => line.startsWith('-'))
+          .map((line: string) => line.substring(1).trim())
+          .filter((line: string) => line.length > 0);
+        
+        aiResponse = aiResponse.replace(/\[SEÇENEK[LER]*\][\s\S]*?\[\/SEÇENEK[LER]*\]/i, '').trim();
+      }
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse, options }]);
+    } catch (error) {
+      console.error('Error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen hata';
+      
+      let userFriendlyMessage = 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.';
+      if (errorMessage === 'OVERLOAD') {
+        userFriendlyMessage = '⚠️ AI sistemi şu anda yoğun. Lütfen birkaç saniye bekleyip tekrar deneyin veya mesajınızı manuel yazabilirsiniz.';
+      }
+      
+      setMessages(prev => [...prev, { 
+        role: 'assistant', 
+        content: userFriendlyMessage
+      }]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const sendMessage = async () => {
     if (!inputMessage.trim() || isLoading) return;
@@ -62,10 +214,32 @@ Kurallar:
 1. Önceki konuşmaları hatırla ve bağlamı koru
 2. Her mesajda merhaba deme, sadece ilk mesajda selamlaştın
 3. Kullanıcının proje ihtiyacını dinle ve anla
-4. Proje için ek özellikler öner
-5. Kullanıcıya sorular sor ve projeyi detaylandır
-6. Teknik öneriler sun
-7. Samimi, profesyonel ve yardımcı ol
+4. Açık uçlu soru sormak yerine, kullanıcıya seçebileceği SEÇENEKLER sun
+5. ÇOK ÖNEMLİ: Her yanıtında MUTLAKA seçenekler sun! Açık uçlu soru sorma!
+6. Seçenekleri AYNEN ŞU FORMATTA listele (boşluk ve tire önemli):
+   
+[SEÇENEKLER]
+- Seçenek 1
+- Seçenek 2
+- Seçenek 3
+[/SEÇENEKLER]
+
+7. Her seçenek kısa ve net olmalı (maksimum 5-6 kelime)
+8. 3-6 arası seçenek sun
+9. Teknik öneriler sun
+10. Samimi, profesyonel ve yardımcı ol
+11. FİYAT KONUSUNDA ÖNEMLİ: Fiyat sorulduğunda kesinlikle fiyat verme! "Fiyatlandırma konusunda size yardımcı olamıyorum. Ancak aşağıdaki buton ile yetkili kişilerimizden detaylı fiyat teklifi alabilirsiniz." şeklinde yanıt ver.
+
+Örnek yanıt (TAM OLARAK BU FORMATTA):
+Harika! Web sitesi için size yardımcı olabilirim. Hangi tür bir web sitesi istersiniz?
+
+[SEÇENEKLER]
+- E-Ticaret Sitesi
+- Kurumsal Web Sitesi
+- Blog/İçerik Sitesi
+- Portfolyo Sitesi
+- Online Eğitim Platformu
+[/SEÇENEKLER]
 
 Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
 
@@ -74,28 +248,36 @@ Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
         parts: [{ text: msg.content }]
       }));
 
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyAXa00FoFLPQAHeotpkWT6HDxRRtc9nBFU', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          system_instruction: {
-            parts: [{ text: systemPrompt }]
-          },
-          contents: conversationHistory
-        })
-      });
-
-      const data = await response.json();
-      const aiResponse = data.candidates[0]?.content?.parts[0]?.text || 'Üzgünüm, bir hata oluştu.';
+      let aiResponse = await callAIWithRetry(conversationHistory, systemPrompt);
       
-      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse }]);
+      let options: string[] | undefined = undefined;
+      const optionsMatch = aiResponse.match(/\[SEÇENEK[LER]*\]([\s\S]*?)\[\/SEÇENEK[LER]*\]/i);
+      
+      if (optionsMatch) {
+        const optionsText = optionsMatch[1];
+        options = optionsText
+          .split('\n')
+          .map((line: string) => line.trim())
+          .filter((line: string) => line.startsWith('-'))
+          .map((line: string) => line.substring(1).trim())
+          .filter((line: string) => line.length > 0);
+        
+        aiResponse = aiResponse.replace(/\[SEÇENEK[LER]*\][\s\S]*?\[\/SEÇENEK[LER]*\]/i, '').trim();
+      }
+      
+      setMessages(prev => [...prev, { role: 'assistant', content: aiResponse, options }]);
     } catch (error) {
       console.error('Error:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen hata';
+      
+      let userFriendlyMessage = 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.';
+      if (errorMessage === 'OVERLOAD') {
+        userFriendlyMessage = '⚠️ AI sistemi şu anda yoğun. Lütfen birkaç saniye bekleyip tekrar deneyin veya mesajınızı manuel yazabilirsiniz.';
+      }
+      
       setMessages(prev => [...prev, { 
         role: 'assistant', 
-        content: 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.' 
+        content: userFriendlyMessage
       }]);
     } finally {
       setIsLoading(false);
@@ -120,18 +302,18 @@ Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: `Aşağıdaki müşteri-danışman konuşmasını analiz et .
+              text: `Aşağıdaki müşteri-danışman konuşmasını analiz et.
 
 Konuşma:
 ${conversationText}
 
 Görevin:
 1. Kullanıcının istediği projeyi/çözümü belirle
-2. Konuşulan özellikleri ve gereksinimleri maddeler halinde listele
+2. Konuşmada bahsedilen tüm özellik ve gereksinimleri maddeler halinde listele
 3. Önerilen teknolojileri ve yaklaşımları belirt
 4. Profesyonel bir WhatsApp mesajı formatında yaz
 5. Önerileri koyma 
-6. Sadece kullanıcının onay verdigi şeyleri yaz 
+6. Sadece kullanıcının onay verdiği veya istediği şeyleri yaz 
 
 Format:
 Merhaba Özden Solutions,
@@ -153,6 +335,11 @@ Sadece mesajı yaz, başka açıklama ekleme.`
       });
 
       const data = await response.json();
+      
+      if (!response.ok || !data.candidates || data.candidates.length === 0) {
+        throw new Error(data.error?.message || 'API yanıt vermedi');
+      }
+      
       const summary = data.candidates[0]?.content?.parts[0]?.text || 'Konuşma özeti oluşturulamadı.';
       
       const phoneNumber = '+905398884561';
@@ -265,7 +452,7 @@ Sadece mesajı yaz, başka açıklama ekleme.`
                             ? 'bg-gradient-to-br from-purple-600 via-purple-600 to-blue-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/40' 
                             : 'bg-gradient-to-br from-slate-900/95 via-slate-800/95 to-slate-900/95 backdrop-blur-xl text-slate-100 border border-purple-500/20 shadow-xl shadow-black/30 hover:border-purple-500/40'
                         }`}>
-                          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-blue-600/5 to-purple-600/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                          <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-blue-600/5 to-purple-600/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                           
                           <div className="relative text-sm leading-relaxed space-y-3 formatted-content">
                             {message.content.split('\n').map((paragraph, pIndex) => {
@@ -293,6 +480,20 @@ Sadece mesajı yaz, başka açıklama ekleme.`
                               );
                             }).filter(Boolean)}
                           </div>
+                          {message.options && message.options.length > 0 && (
+                            <div className="relative z-10 flex flex-wrap gap-2 mt-4">
+                              {message.options.map((option, optIndex) => (
+                                <button
+                                  key={optIndex}
+                                  onClick={() => handleOptionClick(option)}
+                                  disabled={isLoading}
+                                  className="relative z-10 px-4 py-2 bg-gradient-to-r from-purple-600/30 to-blue-600/30 hover:from-purple-600/50 hover:to-blue-600/50 border border-purple-500/40 hover:border-purple-400/60 text-white rounded-xl text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/30 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
+                                >
+                                  {option}
+                                </button>
+                              ))}
+                            </div>
+                          )}
                         </div>
                         {message.role === 'user' && (
                           <div className="relative flex-shrink-0 mb-1">

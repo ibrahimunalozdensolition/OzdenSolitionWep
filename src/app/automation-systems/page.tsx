@@ -122,7 +122,7 @@ export default function AutomationSystems() {
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-cyan-300 transition-colors">Enerji Yönetimi</h3>
                   <p className="text-slate-400 leading-relaxed mb-6 group-hover:text-slate-300 transition-colors">
-                    Akıllı sayaçlar, enerji izleme sistemleri ve otomatik optimizasyon ile enerji tüketiminizi %40'a kadar azaltın ve maliyetlerinizi düşürün.
+                    Akıllı sayaçlar, enerji izleme sistemleri ve otomatik optimizasyon ile enerji tüketiminizi %40&apos;a kadar azaltın ve maliyetlerinizi düşürün.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <span className="text-xs px-3 py-1 bg-cyan-500/10 border border-cyan-500/20 rounded-full text-cyan-400">Smart Meter</span>
@@ -344,7 +344,7 @@ export default function AutomationSystems() {
                   </div>
                   <div>
                     <h4 className="text-lg font-bold text-white mb-2">Enerji Tasarrufu</h4>
-                    <p className="text-slate-400 text-sm">Akıllı optimizasyon ile %40'a varan enerji tasarrufu ve maliyet düşürme</p>
+                    <p className="text-slate-400 text-sm">Akıllı optimizasyon ile %40&apos;a varan enerji tasarrufu ve maliyet düşürme</p>
                   </div>
                 </div>
 
