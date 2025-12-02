@@ -13,7 +13,7 @@ export default function Sidebar() {
   const services = [
     { name: 'Mobil Uygulama Geliştirme', href: '/mobile-app-development' },
     { name: 'Web Uygulaması & Web Sitesi', href: '/web-development' },
-    { name: 'RPA', href: '/rpa' },
+    { name: 'Robotik Süreç Otomasyonu', href: '/rpa' },
     { name: 'Grafik Tasarım & UI/UX', href: '/graphic-design' },
     { name: 'Yapay Zeka Çözümleri', href: '/ai-solutions' },
     { name: 'Elektronik Kart Tasarım', href: '/electronic-design' },

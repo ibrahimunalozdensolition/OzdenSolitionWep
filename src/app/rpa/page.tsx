@@ -16,7 +16,7 @@ export default function RPA() {
             <div className="flex flex-col items-center justify-center min-h-screen text-center space-y-8 max-w-5xl mx-auto pt-20">
               <div className="space-y-6">
                 <div className="inline-block px-6 py-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full">
-                  <span className="text-orange-400 font-semibold text-sm tracking-wide uppercase">Robotic Process Automation</span>
+                  <span className="text-orange-400 font-semibold text-sm tracking-wide uppercase">Robotik Süreç Otomasyonu</span>
                 </div>
                 
                 <h1 className="text-4xl sm:text-6xl lg:text-7xl font-bold bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent leading-tight">
@@ -51,7 +51,7 @@ export default function RPA() {
             <div className="space-y-16 max-w-7xl mx-auto">
               <div className="text-center space-y-4">
                 <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent">
-                  RPA Çözümlerimiz
+                  Robotik Süreç Otomasyonu Çözümlerimiz
                 </h2>
                 <p className="text-slate-300 text-lg max-w-3xl mx-auto leading-relaxed">
                   UiPath, Automation Anywhere ve Blue Prism ile kurumsal düzeyde robotik süreç otomasyonu çözümleri
@@ -91,10 +91,10 @@ export default function RPA() {
             <div className="text-center space-y-8 max-w-4xl mx-auto py-16">
               <div className="space-y-4">
                 <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-orange-400 via-red-400 to-orange-400 bg-clip-text text-transparent">
-                  RPA Yolculuğunuza Başlayın
+                  Robotik Süreç Otomasyonu Yolculuğunuza Başlayın
                 </h2>
                 <p className="text-slate-300 text-lg leading-relaxed">
-                  İş süreçlerinizi analiz ederek size özel RPA çözümü oluşturalım
+                  İş süreçlerinizi analiz ederek size özel robotik süreç otomasyonu çözümü oluşturalım
                 </p>
               </div>
               

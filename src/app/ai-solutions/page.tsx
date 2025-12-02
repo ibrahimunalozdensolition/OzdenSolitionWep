@@ -49,7 +49,7 @@ export default function AISolutions() {
   const callAIWithRetry = async (conversationHistory: Array<{role: string; parts: Array<{text: string}>}>, systemPrompt: string, maxRetries = 3) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyAXa00FoFLPQAHeotpkWT6HDxRRtc9nBFU', {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCIyzb6bawse3O_3IxXnNJfWxPEhhqJ3mI', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -66,17 +66,17 @@ export default function AISolutions() {
         
         if (!response.ok || !data.candidates || data.candidates.length === 0) {
           const errorMsg = data.error?.message || 'API yanıt vermedi';
-          if (errorMsg.includes('overloaded') || errorMsg.includes('quota') || errorMsg.includes('limit')) {
+          if (errorMsg.includes('overloaded') || errorMsg.includes('quota') || errorMsg.includes('limit') || errorMsg.includes('RESOURCE_EXHAUSTED')) {
             if (attempt < maxRetries) {
               await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
               continue;
             }
-            throw new Error('OVERLOAD');
+            throw new Error('SERVICE_UNAVAILABLE');
           }
           throw new Error(errorMsg);
         }
         
-        return data.candidates[0]?.content?.parts[0]?.text || 'Üzgünüm, bir hata oluştu.';
+        return data.candidates[0]?.content?.parts[0]?.text || 'Hizmetlerimiz şu anda aktif değil. Lütfen daha sonra tekrar deneyin.';
       } catch (error) {
         if (attempt === maxRetries) throw error;
         await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
@@ -170,9 +170,9 @@ Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
       console.error('Error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen hata';
       
-      let userFriendlyMessage = 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.';
-      if (errorMessage === 'OVERLOAD') {
-        userFriendlyMessage = '⚠️ AI sistemi şu anda yoğun. Lütfen birkaç saniye bekleyip tekrar deneyin veya mesajınızı manuel yazabilirsiniz.';
+      let userFriendlyMessage = 'Hizmetlerimiz şu anda aktif değil. Lütfen daha sonra tekrar deneyin.';
+      if (errorMessage === 'SERVICE_UNAVAILABLE' || errorMessage.includes('quota') || errorMessage.includes('limit')) {
+        userFriendlyMessage = 'Hizmetlerimiz şu anda aktif değil. Lütfen daha sonra tekrar deneyin.';
       }
       
       setMessages(prev => [...prev, { 
@@ -270,9 +270,9 @@ Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
       console.error('Error:', error);
       const errorMessage = error instanceof Error ? error.message : 'Bilinmeyen hata';
       
-      let userFriendlyMessage = 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.';
-      if (errorMessage === 'OVERLOAD') {
-        userFriendlyMessage = '⚠️ AI sistemi şu anda yoğun. Lütfen birkaç saniye bekleyip tekrar deneyin veya mesajınızı manuel yazabilirsiniz.';
+      let userFriendlyMessage = 'Hizmetlerimiz şu anda aktif değil. Lütfen daha sonra tekrar deneyin.';
+      if (errorMessage === 'SERVICE_UNAVAILABLE' || errorMessage.includes('quota') || errorMessage.includes('limit')) {
+        userFriendlyMessage = 'Hizmetlerimiz şu anda aktif değil. Lütfen daha sonra tekrar deneyin.';
       }
       
       setMessages(prev => [...prev, { 
@@ -294,7 +294,7 @@ Kısa, anlaşılır ve konuşkan ol. Türkçe yanıt ver.`;
         .map(msg => `${msg.role === 'user' ? 'Kullanıcı' : 'Asistan'}: ${msg.content}`)
         .join('\n\n');
 
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyAXa00FoFLPQAHeotpkWT6HDxRRtc9nBFU', {
+      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCIyzb6bawse3O_3IxXnNJfWxPEhhqJ3mI', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
