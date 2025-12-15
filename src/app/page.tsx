@@ -55,7 +55,7 @@ export default function Home() {
   const callAIWithRetry = async (conversationHistory: Array<{role: string; parts: Array<{text: string}>}>, systemPrompt: string, maxRetries = 3) => {
     for (let attempt = 1; attempt <= maxRetries; attempt++) {
       try {
-        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCIyzb6bawse3O_3IxXnNJfWxPEhhqJ3mI', {
+        const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCy2EQb6VhP8jiNQmItrlJfBEfXKP9zuW4', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
