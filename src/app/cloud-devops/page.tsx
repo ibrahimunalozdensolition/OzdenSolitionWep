@@ -1,10 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-
 export default function CloudDevOps() {
-  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 via-blue-900 to-purple-900">
@@ -42,28 +38,7 @@ export default function CloudDevOps() {
             </div>
           </div>
 
-          <div className="text-center space-y-8 max-w-4xl mx-auto py-16">
-            <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-sky-400 via-blue-400 to-sky-400 bg-clip-text text-transparent">
-              Bulut Yolculuğunuza Başlayın
-            </h2>
-            <button onClick={() => setShowWhatsAppModal(true)} className="px-10 py-5 bg-gradient-to-r from-sky-600 to-blue-600 rounded-full text-white font-bold text-lg transition-all duration-300 hover:from-sky-700 hover:to-blue-700 hover:scale-105">
-              WhatsApp ile İletişim
-            </button>
-          </div>
         </main>
-
-        {showWhatsAppModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-gradient-to-br from-slate-900/90 via-purple-900/60 to-blue-900/80 rounded-2xl p-6 max-w-sm w-full mx-4">
-              <button onClick={() => setShowWhatsAppModal(false)} className="float-right text-2xl text-slate-400">×</button>
-              <h3 className="text-xl font-semibold text-white mb-6">WhatsApp İletişim</h3>
-              <div className="space-y-3">
-                <a href="https://wa.me/905398884561" target="_blank" rel="noopener noreferrer" className="block p-4 bg-green-600/20 rounded-xl text-white text-center">0(539) 888 45 61</a>
-                <a href="https://wa.me/905510670094" target="_blank" rel="noopener noreferrer" className="block p-4 bg-green-600/20 rounded-xl text-white text-center">0(551) 067 00 94</a>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

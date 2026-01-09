@@ -44,7 +44,7 @@ export default function Home() {
                 </button>
 
                 <Link
-                  href="#iletisim"
+                  href="/ai-chat"
                   className="px-8 py-4 border-2 border-purple-500/50 rounded-full text-slate-300 font-semibold text-lg transition-all duration-300 hover:border-purple-400 hover:text-white hover:bg-purple-500/10 hover:scale-105"
                 >
                   İletişime Geçin

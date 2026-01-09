@@ -1,10 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-
 export default function GraphicDesign() {
-  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 via-blue-900 to-purple-900">
@@ -80,12 +76,6 @@ export default function GraphicDesign() {
             <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-pink-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
               Tasarım Projenize Başlayın
             </h2>
-            <button 
-              onClick={() => setShowWhatsAppModal(true)}
-              className="group relative px-10 py-5 bg-gradient-to-r from-pink-600 to-purple-600 rounded-full text-white font-bold text-lg transition-all duration-300 hover:from-pink-700 hover:to-purple-700 hover:scale-105 hover:shadow-2xl hover:shadow-pink-500/30"
-            >
-              <span className="relative z-10">WhatsApp ile İletişim</span>
-            </button>
           </div>
 
           <div className="border-t border-slate-700/30 pt-10 mt-20 max-w-7xl mx-auto">
@@ -96,41 +86,6 @@ export default function GraphicDesign() {
             </div>
           </div>
         </main>
-
-        {showWhatsAppModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-gradient-to-br from-slate-900/90 via-purple-900/60 to-blue-900/80 rounded-2xl p-6 max-w-sm w-full mx-4 border border-slate-700/50 shadow-2xl">
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-3">
-                  <div className="w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
-                    <Image 
-                      src="/whatsapp-logo.svg" 
-                      alt="WhatsApp" 
-                      width={24}
-                      height={24}
-                      className="w-6 h-6"
-                    />
-                  </div>
-                  <h3 className="text-xl font-semibold text-white">WhatsApp İletişim</h3>
-                </div>
-                <button onClick={() => setShowWhatsAppModal(false)} className="text-slate-400 hover:text-white">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <p className="text-slate-300 mb-6 text-center">Hangi numaradan iletişime geçmek istiyorsunuz?</p>
-              <div className="space-y-3">
-                <a href="https://wa.me/905398884561" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-gradient-to-r from-green-600/20 to-green-500/20 border border-green-500/30 rounded-xl hover:from-green-600/30 hover:to-green-500/30 transition-all" onClick={() => setShowWhatsAppModal(false)}>
-                  <span className="text-white font-medium">0(539) 888 45 61</span>
-                </a>
-                <a href="https://wa.me/905510670094" target="_blank" rel="noopener noreferrer" className="flex items-center justify-between p-4 bg-gradient-to-r from-green-600/20 to-green-500/20 border border-green-500/30 rounded-xl hover:from-green-600/30 hover:to-green-500/30 transition-all" onClick={() => setShowWhatsAppModal(false)}>
-                  <span className="text-white font-medium">0(551) 067 00 94</span>
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );

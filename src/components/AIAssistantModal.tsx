@@ -54,7 +54,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
     const callAIWithRetry = async (conversationHistory: Array<{ role: string; parts: Array<{ text: string }> }>, systemPrompt: string, maxRetries = 3) => {
         for (let attempt = 1; attempt <= maxRetries; attempt++) {
             try {
-                const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCy2EQb6VhP8jiNQmItrlJfBEfXKP9zuW4', {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -299,7 +299,7 @@ export default function AIAssistantModal({ isOpen, onClose }: AIAssistantModalPr
                 .map(msg => `${msg.role === 'user' ? 'Kullanıcı' : 'Asistan'}: ${msg.content}`)
                 .join('\n\n');
 
-            const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=AIzaSyCy2EQb6VhP8jiNQmItrlJfBEfXKP9zuW4', {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.NEXT_PUBLIC_GEMINI_API_KEY}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

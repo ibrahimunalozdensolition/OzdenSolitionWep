@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
-import FloatingMailButton from "@/components/FloatingMailButton";
-import FloatingAIButton from "@/components/FloatingAIButton";
+import ClientProviders from "@/components/ClientProviders";
+import Script from "next/script";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -19,9 +19,48 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://ozdensolutions.com'),
   title: "Özden Solutions - İnovatif Teknoloji Çözümleri",
   description: "Mobil uygulama, web geliştirme, yapay zeka, RPA ve daha fazlası için profesyonel teknoloji çözümleri",
+  keywords: [
+    "mobil uygulama geliştirme",
+    "web geliştirme",
+    "yapay zeka çözümleri",
+    "RPA",
+    "robotik süreç otomasyonu",
+    "grafik tasarım",
+    "UI/UX tasarım",
+    "elektronik kart tasarım",
+    "PCB tasarım",
+    "3D baskı",
+    "otomasyon sistemleri",
+    "mikroişlemci programlama",
+    "siber güvenlik",
+    "bulut çözümleri",
+    "DevOps",
+    "sosyal medya yönetimi",
+    "yazılım geliştirme Türkiye"
+  ],
+  authors: [{ name: "Özden Solutions" }],
+  creator: "Özden Solutions",
+  publisher: "Özden Solutions",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  alternates: {
+    canonical: 'https://ozdensolutions.com',
+  },
   openGraph: {
     title: "Özden Solutions - İnovatif Teknoloji Çözümleri",
     description: "Mobil uygulama, web geliştirme, yapay zeka, RPA ve daha fazlası için profesyonel teknoloji çözümleri",
+    url: 'https://ozdensolutions.com',
+    siteName: 'Özden Solutions',
+    locale: 'tr_TR',
     images: [
       {
         url: '/amblem-beyaz.png',
@@ -37,6 +76,9 @@ export const metadata: Metadata = {
     title: "Özden Solutions - İnovatif Teknoloji Çözümleri",
     description: "Mobil uygulama, web geliştirme, yapay zeka, RPA ve daha fazlası için profesyonel teknoloji çözümleri",
     images: ['/amblem-beyaz.png'],
+  },
+  verification: {
+    google: 'google-site-verification-code',
   },
 };
 
@@ -78,10 +120,25 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          strategy="afterInteractive"
+          src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-XXXXXXXXXX');
+            `,
+          }}
+        />
         <Sidebar />
         {children}
-        <FloatingAIButton />
-        <FloatingMailButton />
+        <ClientProviders />
       </body>
     </html>
   );

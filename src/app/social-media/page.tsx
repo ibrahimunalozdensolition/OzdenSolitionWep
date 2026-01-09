@@ -1,10 +1,6 @@
 'use client';
 
-import Image from 'next/image';
-import { useState } from 'react';
-
 export default function SocialMediaManagement() {
-  const [showWhatsAppModal, setShowWhatsAppModal] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-purple-900 via-blue-900 to-purple-900">
@@ -67,33 +63,8 @@ export default function SocialMediaManagement() {
             <h2 className="text-3xl sm:text-5xl font-bold bg-gradient-to-r from-rose-400 via-pink-400 to-rose-400 bg-clip-text text-transparent">
               Sosyal Medya Yönetimine Başlayın
             </h2>
-            <button 
-              onClick={() => setShowWhatsAppModal(true)}
-              className="px-10 py-5 bg-gradient-to-r from-rose-600 to-pink-600 rounded-full text-white font-bold text-lg transition-all duration-300 hover:from-rose-700 hover:to-pink-700 hover:scale-105"
-            >
-              WhatsApp ile İletişim
-            </button>
           </div>
         </main>
-
-        {showWhatsAppModal && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-            <div className="bg-gradient-to-br from-slate-900/90 via-purple-900/60 to-blue-900/80 rounded-2xl p-6 max-w-sm w-full mx-4 border border-slate-700/50">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="text-xl font-semibold text-white">WhatsApp İletişim</h3>
-                <button onClick={() => setShowWhatsAppModal(false)} className="text-slate-400">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-              <div className="space-y-3">
-                <a href="https://wa.me/905398884561" target="_blank" rel="noopener noreferrer" className="block p-4 bg-green-600/20 border border-green-500/30 rounded-xl text-white text-center" onClick={() => setShowWhatsAppModal(false)}>0(539) 888 45 61</a>
-                <a href="https://wa.me/905510670094" target="_blank" rel="noopener noreferrer" className="block p-4 bg-green-600/20 border border-green-500/30 rounded-xl text-white text-center" onClick={() => setShowWhatsAppModal(false)}>0(551) 067 00 94</a>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
