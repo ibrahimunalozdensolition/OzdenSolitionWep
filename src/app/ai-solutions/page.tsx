@@ -342,9 +342,9 @@ Sadece mesajı yaz, başka açıklama ekleme.`
       
       const summary = data.candidates[0]?.content?.parts[0]?.text || 'Konuşma özeti oluşturulamadı.';
       
-      const phoneNumber = '+905398884561';
+      const phoneNumber = '905398884561';
       const message = encodeURIComponent(summary.trim());
-      window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
+      window.location.href = `https://api.whatsapp.com/send?phone=${phoneNumber}&text=${message}`;
     } catch (error) {
       console.error('Error:', error);
       alert('Özet oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
@@ -905,20 +905,6 @@ Sadece mesajı yaz, başka açıklama ekleme.`
             </div>
           </div>
         </main>
-
-        <button
-          onClick={() => setShowWhatsAppModal(true)}
-          className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-cyan-500 hover:bg-cyan-600 rounded-full shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
-          title="WhatsApp ile iletişime geçin"
-        >
-          <Image 
-            src="/whatsapp-logo.svg" 
-            alt="WhatsApp" 
-            width={32}
-            height={32}
-            className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300"
-          />
-        </button>
 
         {showWhatsAppModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">

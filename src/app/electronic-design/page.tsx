@@ -410,20 +410,6 @@ export default function ElectronicDesign() {
           </div>
         </main>
 
-        <button
-          onClick={() => setShowWhatsAppModal(true)}
-          className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-110 flex items-center justify-center group"
-          title="WhatsApp ile iletişime geçin"
-        >
-          <Image 
-            src="/whatsapp-logo.svg" 
-            alt="WhatsApp" 
-            width={32}
-            height={32}
-            className="w-8 h-8 text-white group-hover:scale-110 transition-transform duration-300"
-          />
-        </button>
-
         {showWhatsAppModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-gradient-to-br from-slate-900/90 via-purple-900/60 to-blue-900/80 rounded-2xl p-6 max-w-sm w-full mx-4 border border-slate-700/50 shadow-2xl">

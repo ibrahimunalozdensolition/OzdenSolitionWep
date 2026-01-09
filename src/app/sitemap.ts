@@ -7,20 +7,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const routes = [
     '',
+    '/ai-chat',
+    '/ai-solutions',
     '/mobile-app-development',
     '/web-development',
     '/rpa',
-    '/graphic-design',
-    '/ai-solutions',
-    '/pcb-design',
-    '/automation-systems',
-    '/social-media-management',
-    '/microcontroller-programming',
     '/3d-printing',
+    '/electronic-design',
+    '/automation-systems',
+    '/microcontroller-programming',
+    '/social-media',
+    '/graphic-design',
     '/cybersecurity',
     '/cloud-devops',
-    '/electronic-design',
-    '/social-media',
   ]
 
   return routes.map((route) => ({

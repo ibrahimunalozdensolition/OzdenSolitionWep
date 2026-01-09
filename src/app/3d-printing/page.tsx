@@ -52,10 +52,6 @@ export default function ThreeDPrinting() {
           </div>
         </main>
 
-        <button onClick={() => setShowWhatsAppModal(true)} className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-green-500 rounded-full shadow-2xl hover:scale-110 transition-all flex items-center justify-center">
-          <Image src="/whatsapp-logo.svg" alt="WhatsApp" width={32} height={32} className="w-8 h-8" />
-        </button>
-
         {showWhatsAppModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
             <div className="bg-gradient-to-br from-slate-900/90 via-purple-900/60 to-blue-900/80 rounded-2xl p-6 max-w-sm w-full mx-4">
